@@ -10,8 +10,9 @@ def get_in():
 
     height = float(input('Height level (0-1): '))
     width = float(input('Width level (0-1): '))
+    pos = input('Pos (coords): ')
 
-    return height, width
+    return height, width, pos
 
 
 print('Starting mqtt...')
@@ -21,11 +22,11 @@ try:
     client.on_connect = on_connect
     client.connect('broker.hivemq.com', 1883, 60)
 
-    height, width = get_in()
+    height, width, pos = get_in()
 
     while True:
         print("Sending values..")
-        client.publish('heim:trash-levels', str(f"h:{height} w:{width}"))
-        height, width = get_in()
+        client.publish('heim:trash-levels', str(f"h:{height} w:{width} p:{pos}"))
+        height, width, pos = get_in()
 except KeyboardInterrupt:
     print("\nBye!")

@@ -12,8 +12,8 @@ def on_connect(client, userdata, flags, result_code):
     client.subscribe('heim:trash-levels')
 
 
-gh = Gauge('trash:height', 'Trash level height')
-gw = Gauge('trash:width', 'Trash level width')
+gh = Gauge('trash:height', 'Trash level height', ['position'])
+gw = Gauge('trash:width', 'Trash level width', ['position'])
 
 
 def on_message(client, userdata, msg):
@@ -21,9 +21,10 @@ def on_message(client, userdata, msg):
     split = msg.payload.decode("utf-8").split(" ")
     height = float(split[0].split(":")[1])
     width = float(split[1].split(":")[1])
+    pos = split[2].split(":")[1]
 
-    gh.set(height)
-    gw.set(width)
+    gh.labels(pos).set(height)
+    gw.labels(pos).set(width)
 
 
 print('Starting mqtt...')
